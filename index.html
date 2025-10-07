@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vehicle Mileage & Fuel Calculator</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap');
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+    body{
+        background: radial-gradient(circle at top left, #1e293b, #0a0a0a);
+        min-height:100vh;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        color:white;
+    }
+    .card{
+        background:rgba(255,255,255,0.05);
+        border:1px solid rgba(255,255,255,0.2);
+        border-radius:25px;
+        padding:40px 30px;
+        width:360px;
+        text-align:center;
+        box-shadow:0 0 30px rgba(255,0,0,0.3);
+        backdrop-filter:blur(15px);
+        animation:fadeIn 1s ease forwards;
+    }
+    @keyframes fadeIn{
+        from{opacity:0;transform:translateY(-20px);}
+        to{opacity:1;transform:translateY(0);}
+    }
+    h1{
+        font-size:22px;
+        margin-bottom:25px;
+        color:#ff3b3b;
+        text-shadow:0 0 10px #ff3b3b;
+    }
+    select, input{
+        width:100%;
+        background:rgba(255,255,255,0.15);
+        border:1px solid rgba(255,255,255,0.3);
+        border-radius:10px;
+        color:#fff;
+        padding:12px;
+        margin-bottom:15px;
+        font-size:15px;
+        text-align:center;
+        transition:0.3s;
+    }
+    /* Fix: Make dropdown options visible */
+    select {
+        background-color: rgba(20, 20, 20, 0.9);
+        color: #fff;
+        appearance: none;
+        cursor: pointer;
+    }
+    select option {
+        background-color: #1e293b;
+        color: #fff;
+        padding: 10px;
+    }
+    input:focus, select:focus{
+        outline:none;
+        box-shadow:0 0 10px #ff3b3b;
+        border-color:#ff3b3b;
+    }
+    button{
+        width:100%;
+        padding:12px;
+        background:linear-gradient(90deg,#ff3b3b,#ffb800);
+        border:none;
+        border-radius:10px;
+        font-size:16px;
+        font-weight:600;
+        cursor:pointer;
+        color:#0a0a0a;
+        box-shadow:0 0 15px rgba(255,59,59,0.6);
+        transition:0.3s;
+    }
+    button:hover{
+        transform:scale(1.05);
+        box-shadow:0 0 25px rgba(255,184,0,0.8);
+    }
+    .result{
+        margin-top:25px;
+        font-size:18px;
+        font-weight:600;
+        opacity:0;
+        transition:opacity 0.5s ease, transform 0.5s ease;
+    }
+    .show{
+        opacity:1;
+        transform:translateY(0);
+    }
+    .footer{
+        font-size:12px;
+        margin-top:20px;
+        color:#aaa;
+    }
+</style>
+</head>
+<body>
+    <div class="card">
+        <h1>🏍️ Vehicle Mileage & Fuel Calculator</h1>
+
+        <select id="mode" onchange="toggleMode()">
+            <option value="mileage">Calculate Mileage</option>
+            <option value="fuel">Calculate Fuel Needed</option>
+        </select>
+
+        <div id="mileageMode">
+            <input type="number" id="distance" placeholder="Enter Distance (km)">
+            <input type="number" id="fuel" placeholder="Enter Fuel Used (litres)">
+        </div>
+
+        <div id="fuelMode" style="display:none;">
+            <input type="number" id="tripDistance" placeholder="Enter Trip Distance (km)">
+            <input type="number" id="bikeMileage" placeholder="Enter Bike Mileage (km/L)">
+        </div>
+
+        <button onclick="calculate()">CALCULATE</button>
+        <div class="result" id="result"></div>
+        <div class="footer">Designed by Stark ⚙️</div>
+    </div>
+
+<script>
+function toggleMode() {
+    const mode = document.getElementById('mode').value;
+    document.getElementById('mileageMode').style.display = (mode === 'mileage') ? 'block' : 'none';
+    document.getElementById('fuelMode').style.display = (mode === 'fuel') ? 'block' : 'none';
+    document.getElementById('result').innerText = '';
+}
+
+function calculate() {
+    const mode = document.getElementById('mode').value;
+    const resultBox = document.getElementById('result');
+    resultBox.classList.remove('show');
+
+    if (mode === 'mileage') {
+        const distance = parseFloat(document.getElementById('distance').value);
+        const fuel = parseFloat(document.getElementById('fuel').value);
+
+        if (!distance || !fuel || fuel <= 0) {
+            resultBox.style.color = '#ff6666';
+            resultBox.innerText = '⚠️ Enter valid numbers!';
+        } else {
+            const mileage = (distance / fuel).toFixed(2);
+            resultBox.style.color = '#00ffab';
+            resultBox.innerText = `🚗 Mileage: ${mileage} km/L`;
+        }
+    } else {
+        const tripDistance = parseFloat(document.getElementById('tripDistance').value);
+        const bikeMileage = parseFloat(document.getElementById('bikeMileage').value);
+
+        if (!tripDistance || !bikeMileage || bikeMileage <= 0) {
+            resultBox.style.color = '#ff6666';
+            resultBox.innerText = '⚠️ Enter valid numbers!';
+        } else {
+            const fuelNeeded = (tripDistance / bikeMileage).toFixed(2);
+            resultBox.style.color = '#ffd166';
+            resultBox.innerText = `⛽ Fuel Needed: ${fuelNeeded} Litres`;
+        }
+    }
+    setTimeout(()=>resultBox.classList.add('show'),100);
+}
+</script>
+</body>
+</html>
